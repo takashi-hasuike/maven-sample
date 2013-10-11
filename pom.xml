@@ -1,56 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>maven-sample</groupId>
-  <artifactId>maven-sample</artifactId>
+  <groupId>com.hasuike</groupId>
+  <artifactId>sylph</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>maven-sample</name>
-  <url>https://github.com/takashi-hasuike/maven-sample</url>
+  <distributionManagement>
+    <repository>
+        <id>internal.repo</id>
+        <name>Temporary Staging Repository</name>
+        <url>file://${project.build.directory}/mvn-repo</url>
+    </repository>
+  </distributionManagement>
 
   <properties>
     <github.global.server>github</github.global.server>
   </properties>
 
-  <scm>
-    <url>http://github.com/takashi-hasuike/maven-sample</url>
-    <connection>scm:git:https://github.com/takashi-hasuike/maven-sample.git</connection>
-    <developerConnection>scm:git:https://github.com/takashi-hasuike/maven-sample.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>internal.repo</id>
-      <name>Temporary Staging Repository</name>
-      <url>https://github.com/takashi-hasuike/${project.artifactId}/</url>
-    </repository>
-  </distributionManagement>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.8</version>
-        <configuration>
-          <message>Maven artifacts for ${project.version}</message>
-          <noJekyll>true</noJekyll>
-          <outputDirectory>${project.build.directory}/</outputDirectory>
-          <branch>refs/heads/mvn-repo</branch>
-          <includes><include>**/*</include></includes>
-          <repositoryName>${project.artifactId}</repositoryName>
-          <repositoryOwner>hasuike</repositoryOwner>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-      </plugin>
+        <plugin>
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version>0.8</version>
+            <configuration>
+                <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+                <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+                <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+                <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+                <includes><include>**/*</include></includes>
+                <repositoryName>maven-sample</repositoryName>      <!-- github repo name -->
+                <repositoryOwner>hasuike</repositoryOwner>    <!-- github username  -->
+            </configuration>
+            <executions>
+              <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+              <execution>
+                <goals>
+                  <goal>site</goal>
+                </goals>
+                <phase>deploy</phase>
+              </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
 
